@@ -283,6 +283,13 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
       </div>
       <div class="embed-frame">
         <iframe id="studio-frame" src="http://127.0.0.1:17998/studio/" loading="lazy" title="Musefish Studio 工作台"></iframe>
+        <div id="studio-fallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#0b0d12;padding:24px">
+          <img src="studio-screenshot.png" alt="Musefish Studio 工作台界面预览" style="max-width:100%;max-height:82%;border-radius:10px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.35)">
+          <div style="text-align:center">
+            <div style="font-size:14px;color:var(--fg);font-weight:600;margin-bottom:6px">工作台运行在你自己的电脑上</div>
+            <div style="font-size:12.5px;color:var(--muted)">未检测到本机 Musefish Studio · 上图为界面预览 · <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">下载客户端后即可在线操作</a></div>
+          </div>
+        </div>
       </div>
     </div>
     <p class="embed-note">工作台运行在你自己的电脑上：启动 Musefish Studio 后此处显示实时界面；未启动时下方为空白，属正常现象。</p>
@@ -367,6 +374,7 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
   const dot = document.getElementById("status-dot");
   const text = document.getElementById("status-text");
   const endpoints = ["/api/status", "http://127.0.0.1:17998/api/status"];
+  const fallback = document.getElementById("studio-fallback");
   box.hidden = false;
   for (const ep of endpoints) {
     try {
@@ -384,6 +392,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
       return;
     } catch (_) { /* try next */ }
   }
+  // 未检测到工作台：显示界面截图而非空白 iframe
+  if (fallback) fallback.style.display = "flex";
   dot.classList.add("err");
   text.textContent = "工作台未检测到 · 下载客户端即可本地使用";
 })();
