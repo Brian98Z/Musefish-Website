@@ -18,13 +18,10 @@
 }
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
+#particles-bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
 body{
   margin:0;font:15px/1.7 "Segoe UI Variable Text","Segoe UI",system-ui,"Microsoft YaHei",sans-serif;
-  color:var(--fg);background:
-    radial-gradient(1100px 500px at 85% -10%, rgba(109,110,247,.14), transparent 60%),
-    radial-gradient(900px 420px at -10% 110%, rgba(157,92,246,.10), transparent 60%),
-    linear-gradient(180deg,var(--bg1),var(--bg0));
-  background-attachment:fixed;
+  color:var(--fg);background-color:var(--bg0);
 }
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
@@ -175,6 +172,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
 </style>
 </head>
 <body>
+
+<canvas id="particles-bg" aria-hidden="true"></canvas>
 
 <header>
   <div class="hdr-in">
@@ -396,6 +395,75 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
   if (fallback) fallback.style.display = "flex";
   dot.classList.add("err");
   text.textContent = "工作台未检测到 · 下载客户端即可本地使用";
+})();
+</script>
+<script>
+"use strict";
+// dynamic particle field: nodes + connecting lines, accent-tinted
+(() => {
+  const canvas = document.getElementById("particles-bg");
+  if (!canvas) return;
+  const ctx = canvas.getContext("2d");
+  let W, H, particles = [], rafId = 0;
+  const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const LINK_DIST = 130;
+
+  function resize() {
+    W = canvas.width = innerWidth;
+    H = canvas.height = innerHeight;
+  }
+  function spawn() {
+    const n = Math.min(90, Math.floor((W * H) / 22000));
+    particles = Array.from({ length: n }, () => ({
+      x: Math.random() * W,
+      y: Math.random() * H,
+      vx: (Math.random() - 0.5) * 0.35,
+      vy: (Math.random() - 0.5) * 0.35,
+      r: Math.random() * 1.6 + 0.6,
+      hue: Math.random() < 0.5 ? "109,110,247" : "157,92,246",
+    }));
+  }
+  function frame() {
+    // repaint the soft radial glows that used to live in body background
+    const g = ctx.createLinearGradient(0, 0, 0, H);
+    g.addColorStop(0, "#10131b"); g.addColorStop(1, "#0b0d12");
+    ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+    const rg1 = ctx.createRadialGradient(W * 0.85, -H * 0.1, 0, W * 0.85, -H * 0.1, 1100);
+    rg1.addColorStop(0, "rgba(109,110,247,.14)"); rg1.addColorStop(1, "rgba(109,110,247,0)");
+    ctx.fillStyle = rg1; ctx.fillRect(0, 0, W, H);
+    const rg2 = ctx.createRadialGradient(-W * 0.1, H * 1.1, 0, -W * 0.1, H * 1.1, 900);
+    rg2.addColorStop(0, "rgba(157,92,246,.10)"); rg2.addColorStop(1, "rgba(157,92,246,0)");
+    ctx.fillStyle = rg2; ctx.fillRect(0, 0, W, H);
+
+    for (const p of particles) {
+      p.x += p.vx; p.y += p.vy;
+      if (p.x < -20) p.x = W + 20; if (p.x > W + 20) p.x = -20;
+      if (p.y < -20) p.y = H + 20; if (p.y > H + 20) p.y = -20;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(${p.hue},.55)`;
+      ctx.fill();
+    }
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const a = particles[i], b = particles[j];
+        const dx = a.x - b.x, dy = a.y - b.y;
+        const d2 = dx * dx + dy * dy;
+        if (d2 < LINK_DIST * LINK_DIST) {
+          const alpha = (1 - Math.sqrt(d2) / LINK_DIST) * 0.22;
+          ctx.beginPath();
+          ctx.moveTo(a.x, a.y); ctx.lineTo(b.x, b.y);
+          ctx.strokeStyle = `rgba(140,110,250,${alpha})`;
+          ctx.lineWidth = 1;
+          ctx.stroke();
+        }
+      }
+    }
+    rafId = requestAnimationFrame(frame);
+  }
+  addEventListener("resize", () => { resize(); spawn(); });
+  resize(); spawn();
+  if (reduced) { frame(); cancelAnimationFrame(rafId); } else frame();
 })();
 </script>
 </body>
