@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="Musefish Studio — 开箱即用的本地 AI 媒体工作台：图片/视频超分、音频超分、AI 母带、语音识别、视频下载。">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 128 128'%3E%3Cdefs%3E%3ClinearGradient id='t' x1='0' y1='0' x2='1' y2='1'%3E%3Cstop offset='0' stop-color='%236d6ef7'/%3E%3Cstop offset='1' stop-color='%239d5cf6'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='128' height='128' rx='28' fill='url(%23t)'/%3E%3Cpath d='M96 64 C84 44 56 40 34 56 L20 44 V84 L34 72 C56 88 84 84 96 64 Z' fill='%23ffffff'/%3E%3Ccircle cx='77' cy='57.5' r='5' fill='%236d6ef7'/%3E%3Cpath d='M97 18 l4.2 10.8 L112 33 l-10.8 4.2 L97 48 l-4.2-10.8 L82 33 l10.8-4.2 Z' fill='%23ffffff'/%3E%3C/svg%3E">
+<title>Musefish Studio — 开箱即用的本地 AI 媒体工作台</title>
+<style>
+:root{
+  --bg0:#0b0d12; --bg1:#10131b; --panel:rgba(22,26,36,.72); --panel-solid:#161a24;
+  --fg:#e9ecf4; --muted:#8b93a7; --faint:#5b6376;
+  --border:rgba(255,255,255,.07); --border-hi:rgba(255,255,255,.14);
+  --accent:#6d6ef7; --accent2:#9d5cf6; --accent-soft:rgba(109,110,247,.14);
+  --ok:#34c98a; --warn:#f0a24f; --err:#ef5a6a;
+  --r-lg:16px; --r-md:11px; --r-sm:8px;
+  --shadow:0 8px 28px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;font:15px/1.7 "Segoe UI Variable Text","Segoe UI",system-ui,"Microsoft YaHei",sans-serif;
+  color:var(--fg);background:
+    radial-gradient(1100px 500px at 85% -10%, rgba(109,110,247,.14), transparent 60%),
+    radial-gradient(900px 420px at -10% 110%, rgba(157,92,246,.10), transparent 60%),
+    linear-gradient(180deg,var(--bg1),var(--bg0));
+  background-attachment:fixed;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:1080px;margin:0 auto;padding:0 24px}
+
+/* header */
+header{
+  position:sticky;top:0;z-index:20;height:58px;border-bottom:1px solid var(--border);
+  background:rgba(13,16,23,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.hdr-in{max-width:1080px;margin:0 auto;height:100%;display:flex;align-items:center;gap:22px;padding:0 24px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15.5px;color:var(--fg)}
+.logo svg{width:26px;height:26px}
+.hdr-nav{margin-left:auto;display:flex;gap:4px}
+.hdr-nav a{
+  color:var(--muted);font-size:13.5px;padding:6px 14px;border-radius:var(--r-sm);transition:.18s;
+}
+.hdr-nav a:hover{color:var(--fg);background:rgba(255,255,255,.04);text-decoration:none}
+.hdr-nav a.cta{
+  color:#fff;background:linear-gradient(90deg,var(--accent),var(--accent2));
+  margin-left:6px;box-shadow:0 2px 10px rgba(109,110,247,.35);
+}
+
+/* hero */
+.hero{padding:84px 0 64px;text-align:center}
+.hero h1{
+  margin:0 0 18px;font-size:42px;line-height:1.25;font-weight:800;letter-spacing:-.5px;
+}
+.hero h1 .grad{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+}
+.hero p.lead{margin:0 auto 30px;max-width:640px;color:var(--muted);font-size:16.5px}
+.hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+.btn{
+  display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:var(--r-md);
+  font-size:14.5px;font-weight:600;border:1px solid var(--border-hi);color:var(--fg);
+  transition:.18s;cursor:pointer;
+}
+.btn:hover{text-decoration:none;border-color:var(--accent);background:var(--accent-soft)}
+.btn.primary{
+  background:linear-gradient(90deg,var(--accent),var(--accent2));border:0;color:#fff;
+  box-shadow:0 4px 18px rgba(109,110,247,.4);
+}
+.btn.primary:hover{filter:brightness(1.12)}
+.btn svg{width:16px;height:16px}
+.hero-meta{margin-top:18px;font-size:12.5px;color:var(--faint)}
+
+/* status strip */
+.status{
+  margin:-10px auto 0;max-width:520px;padding:10px 18px;border-radius:999px;
+  border:1px solid var(--border);background:var(--panel);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;gap:9px;font-size:13px;color:var(--muted);
+}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--faint);flex:none;transition:.3s}
+.dot.ok{background:var(--ok);box-shadow:0 0 8px rgba(52,201,138,.6)}
+.dot.err{background:var(--err)}
+
+/* sections */
+section.block{padding:58px 0}
+section.block h2{margin:0 0 8px;font-size:26px;font-weight:750;letter-spacing:-.3px}
+section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
+
+/* feature grid */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
+.card{
+  border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 20px;
+  background:var(--panel);backdrop-filter:blur(8px);transition:.2s;
+}
+.card:hover{border-color:var(--border-hi);transform:translateY(-2px);box-shadow:var(--shadow)}
+.card .ic{
+  width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+  background:var(--accent-soft);margin-bottom:14px;
+}
+.card .ic svg{width:20px;height:20px;stroke:var(--accent)}
+.card h3{margin:0 0 6px;font-size:15.5px;font-weight:650}
+.card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
+.card .tag{
+  display:inline-block;margin-top:12px;font-size:11px;padding:2px 9px;border-radius:999px;
+  border:1px solid var(--border);color:var(--faint);
+}
+
+/* embed / workbench */
+.embed-panel{
+  border:1px solid var(--border);border-radius:var(--r-lg);overflow:hidden;
+  background:var(--panel-solid);box-shadow:var(--shadow);
+}
+.embed-head{
+  display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--border);
+  background:rgba(13,16,23,.6);
+}
+.embed-head .dots{display:flex;gap:6px}
+.embed-head .dots i{width:10px;height:10px;border-radius:50%;background:var(--faint);opacity:.5}
+.embed-head .url{
+  flex:1;text-align:center;font-size:12px;color:var(--faint);font-family:Consolas,monospace;
+  background:rgba(255,255,255,.03);border-radius:6px;padding:3px 12px;max-width:380px;margin:0 auto;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.embed-head .open{font-size:12px;flex:none}
+.embed-frame{position:relative;width:100%;height:720px}
+.embed-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0b0d12}
+.embed-note{margin-top:12px;font-size:12.5px;color:var(--faint);text-align:center}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;counter-reset:step}
+.step{
+  border:1px solid var(--border);border-radius:var(--r-lg);padding:22px 20px;background:var(--panel);
+  counter-increment:step;position:relative;
+}
+.step::before{
+  content:counter(step,decimal-leading-zero);position:absolute;top:18px;right:20px;
+  font-size:26px;font-weight:800;color:var(--accent);opacity:.35;
+}
+.step h3{margin:0 0 8px;font-size:15px}
+.step p{margin:0;color:var(--muted);font-size:13.5px}
+.step code{
+  font-family:Consolas,monospace;font-size:12.5px;background:rgba(255,255,255,.05);
+  border:1px solid var(--border);border-radius:5px;padding:1px 7px;color:var(--fg);
+}
+
+/* faq */
+.faq details{
+  border:1px solid var(--border);border-radius:var(--r-md);padding:14px 18px;margin-bottom:10px;
+  background:var(--panel);
+}
+.faq summary{cursor:pointer;font-weight:600;font-size:14px;user-select:none}
+.faq summary:hover{color:var(--accent)}
+.faq details[open] summary{color:var(--accent)}
+.faq .a{margin-top:10px;color:var(--muted);font-size:13.5px;line-height:1.7}
+.faq .a code{font-family:Consolas,monospace;font-size:12.5px;background:rgba(255,255,255,.05);border-radius:4px;padding:1px 6px}
+
+/* footer */
+footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
+.foot-in{display:flex;align-items:flex-start;gap:30px;flex-wrap:wrap}
+.foot-in .brand{display:flex;align-items:center;gap:9px;font-weight:700}
+.foot-in .brand svg{width:20px;height:20px}
+.foot-in .col{font-size:12.5px;color:var(--faint);line-height:2}
+.foot-in .col a{color:var(--muted);display:block}
+.foot-in .col a:hover{color:var(--accent)}
+.foot-note{margin-top:22px;font-size:11.5px;color:var(--faint);line-height:1.8}
+
+@media (max-width:760px){
+  .hero h1{font-size:30px}
+  .hero{padding:56px 0 44px}
+  .embed-frame{height:640px}
+  .hdr-nav a:not(.cta){display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hdr-in">
+    <div class="logo">
+      <svg viewBox="0 0 128 128" aria-hidden="true"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#6d6ef7"/><stop offset="1" stop-color="#9d5cf6"/></linearGradient></defs><rect width="128" height="128" rx="28" fill="url(#lg)"/><path d="M96 64 C84 44 56 40 34 56 L20 44 V84 L34 72 C56 88 84 84 96 64 Z" fill="#fff"/><circle cx="77" cy="57.5" r="5" fill="#6d6ef7"/><path d="M97 18 l4.2 10.8 L112 33 l-10.8 4.2 L97 48 l-4.2-10.8 L82 33 l10.8-4.2 Z" fill="#fff"/></svg>
+      Musefish
+    </div>
+    <nav class="hdr-nav">
+      <a href="#features">功能</a>
+      <a href="#studio">工作台</a>
+      <a href="#start">快速开始</a>
+      <a href="#faq">FAQ</a>
+      <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes" target="_blank" rel="noopener">GitHub</a>
+      <a class="cta" href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">下载客户端</a>
+    </nav>
+  </div>
+</header>
+
+<div class="wrap">
+
+  <!-- hero -->
+  <div class="hero">
+    <h1>本地 AI 媒体工作台<br><span class="grad">Musefish Studio</span></h1>
+    <p class="lead">开箱即用，无需打开 ComfyUI 网页端。图片 / 视频 / 音频增强与视频下载，全部在工作台界面完成——数据不出本机。</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        下载客户端 v1.9.0
+      </a>
+      <a class="btn" href="#studio">在线体验工作台</a>
+    </div>
+    <div class="hero-meta">Windows x64 · NVIDIA RTX 50 系（DLSS5 需要）· 免安装 portable</div>
+  </div>
+
+  <!-- live status -->
+  <div class="status" id="live-status" hidden>
+    <span class="dot" id="status-dot"></span>
+    <span id="status-text">正在检测工作台状态…</span>
+  </div>
+
+  <!-- features -->
+  <section class="block" id="features">
+    <h2>功能一览</h2>
+    <p class="sub">与 ComfyUI-Musefish-Nodes 插件同一算法引擎，参数逐字对齐，零代码复制。</p>
+    <div class="grid">
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="m21 15-5-5L5 21"/></svg></div>
+        <h3>PiD 图片超分</h3>
+        <p>PixelDiT 扩散超分，1.5×–8K 输出，皮肤保护蒙版与局部结构独立可调。</p>
+        <span class="tag">图像处理</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <h3>DLSS5 图片 / 视频增强</h3>
+        <p>NVIDIA NGX DLSS5 引擎，多风格（natural / cinema）与质量档位，RTX 50 系专属。</p>
+        <span class="tag">图像 · 视频</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg></div>
+        <h3>PiD 视频超分</h3>
+        <p>转图片序列逐帧超分，回封 MP4 并保留原音频，历史重置间隔与会话保持可控。</p>
+        <span class="tag">视频处理</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+        <h3>UniverSR 音频超分</h3>
+        <p>音频超分辨率重建至 48kHz，一体化引擎，与插件节点共用同一实现。</p>
+        <span class="tag">音频处理</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="22"/></svg></div>
+        <h3>AI Mastering 母带</h3>
+        <p>本地 PhaseLimiter 混音引擎：四种母带模式、响度统一（目标 −14/−16/−9 LUFS）与真峰上限。</p>
+        <span class="tag">音频处理</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="20" rx="3"/><path d="M5 10v2a7 7 0 0 0 14 0v-2" opacity=".5"/></svg></div>
+        <h3>语音识别 ASR</h3>
+        <p>faster-whisper 多语种批量处理 + funasr 中文带标点，模型库与插件节点共享。</p>
+        <span class="tag">音频处理</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg></div>
+        <h3>视频下载</h3>
+        <p>通用平台 yt-dlp + 微信视频号内存解密，双引擎覆盖主流来源。</p>
+        <span class="tag">其他工具</span>
+      </div>
+      <div class="card">
+        <div class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg></div>
+        <h3>文件断点续传</h3>
+        <p>直链签名 CDN，并发分片 + 断点续传，与插件下载节点共用同一实现。</p>
+        <span class="tag">其他工具</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- embedded studio -->
+  <section class="block" id="studio">
+    <h2>在线工作台</h2>
+    <p class="sub">Musefish Studio 完整界面已嵌入下方，可直接操作（本机部署时体验最佳）。</p>
+    <div class="embed-panel">
+      <div class="embed-head">
+        <span class="dots"><i></i><i></i><i></i></span>
+        <span class="url">musefish.fun/studio/</span>
+        <a class="open" href="/studio/" target="_blank" rel="noopener">新窗口打开 ↗</a>
+      </div>
+      <div class="embed-frame">
+        <iframe id="studio-frame" src="/studio/" loading="lazy" title="Musefish Studio 工作台"></iframe>
+      </div>
+    </div>
+    <p class="embed-note">推理在本机 headless 引擎上执行；远程访问时任务提交到部署 Studio 服务的机器。</p>
+  </section>
+
+  <!-- quick start -->
+  <section class="block" id="start">
+    <h2>快速开始</h2>
+    <p class="sub">三种方式任选，全程约 15–20 分钟（含模型下载）。</p>
+    <div class="steps">
+      <div class="step">
+        <h3>① 下载客户端（推荐）</h3>
+        <p>从 <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">GitHub Releases</a> 下载 <code>MusefishStudio-Client-*-win-x64.exe</code>，免安装 portable，用 <code>SHA256SUMS.txt</code> 校验完整性。</p>
+      </div>
+      <div class="step">
+        <h3>② 一键准备环境</h3>
+        <p>客户端内「设置 → 环境」点击两个按钮，或命令行：<br><code>python tools\env_setup.py</code><br><code>python tools\download_models.py</code><br>自动完成 venv + ComfyUI 内核 + 依赖 + 模型。</p>
+      </div>
+      <div class="step">
+        <h3>③ 启动工作台</h3>
+        <p>运行 <code>start_server.bat</code>（或直接打开客户端），浏览器访问 <code>http://127.0.0.1:17998</code> 即可使用全部功能。</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- faq -->
+  <section class="block" id="faq">
+    <h2>常见问题</h2>
+    <p class="sub">部署形态、硬件要求与合规边界。</p>
+    <div class="faq">
+      <details>
+        <summary>需要什么硬件？</summary>
+        <div class="a">NVIDIA RTX 50 系显卡（DLSS5 需要 NGX/D3D12 支持）；PiD / UniverSR / Mastering / ASR 在其他 NVIDIA 卡上也可运行，显存需求视模型而定。</div>
+      </details>
+      <details>
+        <summary>数据会上传到云端吗？</summary>
+        <div class="a">不会。推理由本机 headless ComfyUI 引擎（:17996）完成，上传的媒体文件只经过本地工作台服务（:17998）暂存；仅模型下载与更新检查访问外网。</div>
+      </details>
+      <details>
+        <summary>和 ComfyUI 插件是什么关系？</summary>
+        <div class="a">Musefish Studio 是 <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes" target="_blank" rel="noopener">ComfyUI-Musefish-Nodes</a> 插件的本地客户端：算法代码零复制，参数与插件源码逐字对齐；也可在设置里连接本机已装的任意 ComfyUI。</div>
+      </details>
+      <details>
+        <summary>下载功能有什么限制？</summary>
+        <div class="a">仅供学习与研究使用，不支持也无法用于获取受版权保护的内容；平台内容版权归原作者所有，合法性由使用者自行负责。</div>
+      </details>
+    </div>
+  </section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-in">
+      <div class="brand">
+        <svg viewBox="0 0 128 128" aria-hidden="true"><rect width="128" height="128" rx="28" fill="#6d6ef7" opacity=".25"/><path d="M96 64 C84 44 56 40 34 56 L20 44 V84 L34 72 C56 88 84 84 96 64 Z" fill="currentColor"/></svg>
+        Musefish
+      </div>
+      <div class="col">
+        <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes" target="_blank" rel="noopener">项目仓库</a>
+        <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">下载客户端</a>
+        <a href="https://github.com/Brian98Z" target="_blank" rel="noopener">作者 Brian98Z</a>
+      </div>
+      <div class="col">
+        <a href="#features">功能</a>
+        <a href="#studio">在线工作台</a>
+        <a href="#faq">FAQ</a>
+      </div>
+    </div>
+    <div class="foot-note">
+      本工具仅供学习与研究使用；下载功能不支持也无法用于获取受版权保护的内容，用户需对下载内容的合法性自行负责。模型权重版权归各自权利方所有（PiD/PixelDiT/Flux 遵循其官方许可；NVIDIA DLSS/NGX 运行库版权归 NVIDIA）。© 2026 Musefish · Brian98Z
+    </div>
+  </div>
+</footer>
+
+<script>
+"use strict";
+// live status probe: same-origin when deployed together, localhost fallback for local preview
+(async () => {
+  const box = document.getElementById("live-status");
+  const dot = document.getElementById("status-dot");
+  const text = document.getElementById("status-text");
+  const endpoints = ["/api/status", "http://127.0.0.1:17998/api/status"];
+  box.hidden = false;
+  for (const ep of endpoints) {
+    try {
+      const ctl = new AbortController();
+      const t = setTimeout(() => ctl.abort(), 3500);
+      const r = await fetch(ep, { signal: ctl.signal });
+      clearTimeout(t);
+      if (!r.ok) continue;
+      const s = await r.json();
+      const engine = s.comfy && s.comfy.running;
+      dot.classList.add(engine ? "ok" : "err");
+      text.textContent = engine
+        ? "工作台在线 · 推理引擎运行中"
+        : "工作台在线 · 推理引擎未启动";
+      return;
+    } catch (_) { /* try next */ }
+  }
+  dot.classList.add("err");
+  text.textContent = "工作台未检测到 · 下载客户端即可本地使用";
+})();
+</script>
+</body>
+</html>
