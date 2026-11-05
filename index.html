@@ -20,7 +20,7 @@
 html{scroll-behavior:smooth}
 #particles-bg{position:fixed;inset:0;z-index:-1;pointer-events:none}
 body{
-  margin:0;font:15px/1.7 "Segoe UI Variable Text","Segoe UI",system-ui,"Microsoft YaHei",sans-serif;
+  margin:0;font:16.5px/1.7 "Segoe UI Variable Text","Segoe UI",system-ui,"Microsoft YaHei",sans-serif;
   color:var(--fg);background-color:var(--bg0);
 }
 a{color:var(--accent);text-decoration:none}
@@ -33,11 +33,11 @@ header{
   background:rgba(13,16,23,.78);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
 }
 .hdr-in{max-width:1080px;margin:0 auto;height:100%;display:flex;align-items:center;gap:22px;padding:0 24px}
-.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15.5px;color:var(--fg)}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--fg)}
 .logo svg{width:26px;height:26px}
 .hdr-nav{margin-left:auto;display:flex;gap:4px}
 .hdr-nav a{
-  color:var(--muted);font-size:13.5px;padding:6px 14px;border-radius:var(--r-sm);transition:.18s;
+  color:var(--muted);font-size:16.5px;padding:6px 14px;border-radius:var(--r-sm);transition:.18s;
 }
 .hdr-nav a:hover{color:var(--fg);background:rgba(255,255,255,.04);text-decoration:none}
 .hdr-nav a.cta{
@@ -48,17 +48,17 @@ header{
 /* hero */
 .hero{padding:84px 0 64px;text-align:center}
 .hero h1{
-  margin:0 0 18px;font-size:42px;line-height:1.25;font-weight:800;letter-spacing:-.5px;
+  margin:0 0 18px;font-size:52px;line-height:1.25;font-weight:800;letter-spacing:-.5px;
 }
 .hero h1 .grad{
   background:linear-gradient(90deg,var(--accent),var(--accent2));
   -webkit-background-clip:text;background-clip:text;color:transparent;
 }
-.hero p.lead{margin:0 auto 30px;max-width:640px;color:var(--muted);font-size:16.5px}
+.hero p.lead{margin:0 auto 30px;max-width:640px;color:var(--muted);font-size:19px}
 .hero-actions{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
 .btn{
   display:inline-flex;align-items:center;gap:8px;padding:11px 26px;border-radius:var(--r-md);
-  font-size:14.5px;font-weight:600;border:1px solid var(--border-hi);color:var(--fg);
+  font-size:16px;font-weight:600;border:1px solid var(--border-hi);color:var(--fg);
   transition:.18s;cursor:pointer;
 }
 .btn:hover{text-decoration:none;border-color:var(--accent);background:var(--accent-soft)}
@@ -68,7 +68,7 @@ header{
 }
 .btn.primary:hover{filter:brightness(1.12)}
 .btn svg{width:16px;height:16px}
-.hero-meta{margin-top:18px;font-size:12.5px;color:var(--faint)}
+.hero-meta{margin-top:18px;font-size:15.5px;color:var(--faint)}
 
 /* status strip */
 .status{
@@ -82,8 +82,8 @@ header{
 
 /* sections */
 section.block{padding:58px 0}
-section.block h2{margin:0 0 8px;font-size:26px;font-weight:750;letter-spacing:-.3px}
-section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
+section.block h2{margin:0 0 8px;font-size:32px;font-weight:750;letter-spacing:-.3px}
+section.block .sub{margin:0 0 34px;color:var(--muted);font-size:16px}
 
 /* feature grid */
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:16px}
@@ -97,10 +97,10 @@ section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
   background:var(--accent-soft);margin-bottom:14px;
 }
 .card .ic svg{width:20px;height:20px;stroke:var(--accent)}
-.card h3{margin:0 0 6px;font-size:15.5px;font-weight:650}
-.card p{margin:0;color:var(--muted);font-size:13.5px;line-height:1.65}
+.card h3{margin:0 0 6px;font-size:17px;font-weight:650}
+.card p{margin:0;color:var(--muted);font-size:16.5px;line-height:1.65}
 .card .tag{
-  display:inline-block;margin-top:12px;font-size:11px;padding:2px 9px;border-radius:999px;
+  display:inline-block;margin-top:12px;font-size:12.5px;padding:2px 9px;border-radius:999px;
   border:1px solid var(--border);color:var(--faint);
 }
 
@@ -116,14 +116,14 @@ section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
 .embed-head .dots{display:flex;gap:6px}
 .embed-head .dots i{width:10px;height:10px;border-radius:50%;background:var(--faint);opacity:.5}
 .embed-head .url{
-  flex:1;text-align:center;font-size:12px;color:var(--faint);font-family:Consolas,monospace;
+  flex:1;text-align:center;font-size:13.5px;color:var(--faint);font-family:Consolas,monospace;
   background:rgba(255,255,255,.03);border-radius:6px;padding:3px 12px;max-width:380px;margin:0 auto;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
 }
-.embed-head .open{font-size:12px;flex:none}
+.embed-head .open{font-size:13.5px;flex:none}
 .embed-frame{position:relative;width:100%;height:720px}
 .embed-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#0b0d12}
-.embed-note{margin-top:12px;font-size:12.5px;color:var(--faint);text-align:center}
+.embed-note{margin-top:12px;font-size:15.5px;color:var(--faint);text-align:center}
 
 /* steps */
 .steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;counter-reset:step}
@@ -135,10 +135,10 @@ section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
   content:counter(step,decimal-leading-zero);position:absolute;top:18px;right:20px;
   font-size:26px;font-weight:800;color:var(--accent);opacity:.35;
 }
-.step h3{margin:0 0 8px;font-size:15px}
-.step p{margin:0;color:var(--muted);font-size:13.5px}
+.step h3{margin:0 0 8px;font-size:16.5px}
+.step p{margin:0;color:var(--muted);font-size:16.5px}
 .step code{
-  font-family:Consolas,monospace;font-size:12.5px;background:rgba(255,255,255,.05);
+  font-family:Consolas,monospace;font-size:15.5px;background:rgba(255,255,255,.05);
   border:1px solid var(--border);border-radius:5px;padding:1px 7px;color:var(--fg);
 }
 
@@ -147,24 +147,24 @@ section.block .sub{margin:0 0 34px;color:var(--muted);font-size:14.5px}
   border:1px solid var(--border);border-radius:var(--r-md);padding:14px 18px;margin-bottom:10px;
   background:var(--panel);
 }
-.faq summary{cursor:pointer;font-weight:600;font-size:14px;user-select:none}
+.faq summary{cursor:pointer;font-weight:600;font-size:15.5px;user-select:none}
 .faq summary:hover{color:var(--accent)}
 .faq details[open] summary{color:var(--accent)}
-.faq .a{margin-top:10px;color:var(--muted);font-size:13.5px;line-height:1.7}
-.faq .a code{font-family:Consolas,monospace;font-size:12.5px;background:rgba(255,255,255,.05);border-radius:4px;padding:1px 6px}
+.faq .a{margin-top:10px;color:var(--muted);font-size:16.5px;line-height:1.7}
+.faq .a code{font-family:Consolas,monospace;font-size:15.5px;background:rgba(255,255,255,.05);border-radius:4px;padding:1px 6px}
 
 /* footer */
 footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
 .foot-in{display:flex;align-items:flex-start;gap:30px;flex-wrap:wrap}
 .foot-in .brand{display:flex;align-items:center;gap:9px;font-weight:700}
 .foot-in .brand svg{width:20px;height:20px}
-.foot-in .col{font-size:12.5px;color:var(--faint);line-height:2}
+.foot-in .col{font-size:15.5px;color:var(--faint);line-height:2}
 .foot-in .col a{color:var(--muted);display:block}
 .foot-in .col a:hover{color:var(--accent)}
-.foot-note{margin-top:22px;font-size:11.5px;color:var(--faint);line-height:1.8}
+.foot-note{margin-top:22px;font-size:13px;color:var(--faint);line-height:1.8}
 
 @media (max-width:760px){
-  .hero h1{font-size:30px}
+  .hero h1{font-size:36px}
   .hero{padding:56px 0 44px}
   .embed-frame{height:640px}
   .hdr-nav a:not(.cta){display:none}
@@ -285,8 +285,8 @@ footer{border-top:1px solid var(--border);padding:34px 0 40px;margin-top:40px}
         <div id="studio-fallback" style="position:absolute;inset:0;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:#0b0d12;padding:24px">
           <img src="studio-screenshot.png" onerror="this.onerror=null;this.src='http://127.0.0.1:17998/studio-screenshot.png'" alt="Musefish Studio 工作台界面预览" style="max-width:100%;max-height:82%;border-radius:10px;border:1px solid rgba(255,255,255,.08);box-shadow:0 8px 28px rgba(0,0,0,.35)">
           <div style="text-align:center">
-            <div style="font-size:14px;color:var(--fg);font-weight:600;margin-bottom:6px">工作台运行在你自己的电脑上</div>
-            <div style="font-size:12.5px;color:var(--muted)">未检测到本机 Musefish Studio · 上图为界面预览 · <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">下载客户端后即可在线操作</a></div>
+            <div style="font-size:15.5px;color:var(--fg);font-weight:600;margin-bottom:6px">工作台运行在你自己的电脑上</div>
+            <div style="font-size:15.5px;color:var(--muted)">未检测到本机 Musefish Studio · 上图为界面预览 · <a href="https://github.com/Brian98Z/ComfyUI-Musefish-Nodes/releases/latest" target="_blank" rel="noopener">下载客户端后即可在线操作</a></div>
           </div>
         </div>
       </div>
